@@ -71,7 +71,7 @@ public class MTable {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //  Tao ten file
-    private String generateRandomCode(int length) {
+    public static String generateRandomCode(int length) {
         String characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder str = new StringBuilder();
         Random rnd = new Random();
@@ -106,6 +106,66 @@ public class MTable {
             buf_data_return.addAll(mStore.readDataStore(name_file,-1,-1));
         }
         return buf_data_return.toArray(new String[buf_data_return.size()]);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //  Don dep data
+    public void optimalData() {
+        ArrayList<String> buf_data_return = new ArrayList<String>();
+        for(String name_file : list_file_store) {
+            buf_data_return.addAll(mStore.readDataStore(name_file,-1,-1));
+        }
+
+        for(int i = 0; i < buf_data_return.size() - 1; i++) {
+            String temp_1 = buf_data_return.get(i);
+            for(int j = i+1; j < buf_data_return.size(); j++) {
+                if(buf_data_return.get(j).equals(temp_1)) {
+                    buf_data_return.remove(j);
+                    j--;
+                }
+            }
+        }
+        int mem_pos = list_file_store.size();
+        String buffer = "";
+        for(int i = 0; i < buf_data_return.size(); i++) {
+            if(buffer.length() + buf_data_return.get(i).length() + 1 > MStore.LIMIT_SIZE) {
+                if(createNewStore()) {
+                    mStore.writeDataStore(list_file_store.get(list_file_store.size() - 1), 0, buffer);
+                } else {
+                    while(list_file_store.size() > mem_pos) {
+                        mStore.deleteFile(list_file_store.get(mem_pos));
+                        list_file_store.remove(mem_pos);
+                    }
+                    return;
+                }
+            }
+            buffer += buf_data_return.get(i) + '\n';
+        }
+
+        if(buffer.length() > 0) {
+            if(createNewStore()) {
+                mStore.writeDataStore(list_file_store.get(list_file_store.size() - 1), 0, buffer);
+            } else {
+                while(list_file_store.size() > mem_pos) {
+                    mStore.deleteFile(list_file_store.get(mem_pos));
+                    list_file_store.remove(mem_pos);
+                }
+                return;
+            }
+        }
+
+        for(int i = 0; i < mem_pos; i++) {
+            mStore.deleteFile(list_file_store.get(0));
+            list_file_store.remove(0);
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    //  Get dung luong data
+    public long getSize() {
+        long m_return = 0;
+        for(String name_file : list_file_store) {
+            m_return += mStore.getSizeStore(name_file);
+        }
+        return m_return;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     //  Chuyen doi Data thanh Text
@@ -404,7 +464,5 @@ public class MTable {
         return m_return;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
-
-
     ///////////////////////////////////////////////////////////////////////////////////////////////
 }

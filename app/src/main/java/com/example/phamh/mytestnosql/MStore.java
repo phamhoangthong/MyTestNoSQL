@@ -23,8 +23,8 @@ import java.util.ArrayList;
 public class MStore {
     private String file_name_store;
     ///////////////////////////////////////////////////////////////////////////////////////////////
-    //public static long LIMIT_SIZE = 4194304;
-    public static long LIMIT_SIZE = 4096;
+    public static long LIMIT_SIZE = 4194304;
+    //public static long LIMIT_SIZE = 4096;
     ///////////////////////////////////////////////////////////////////////////////////////////////
     private static String dir_root_name_store = "MyStore";
     private static String external_file_store = "txt";//"fhts"
@@ -135,7 +135,6 @@ public class MStore {
             return false;
         }
 
-
         return true;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,20 +230,18 @@ public class MStore {
             fileChannel = mOutput.getChannel();
             ByteBuffer byteBuffer = ByteBuffer.allocate(data.length()).put(convertStringToByte(data));
             byteBuffer.flip();
-            //while (byteBuffer.hasRemaining()) {
-                try {
-                    //fileChannel.position(pos);
-                    int bytes_writed = fileChannel.write(byteBuffer);
-                    if(byteBuffer.hasRemaining()) {
-                        byteBuffer.compact();
-                    } else {
-                        byteBuffer.clear();
-                    }
-                } catch (IOException ex) {
-                    Log.i("MY_DEBUG_MStore", "Cannot finish writing file");
-                    return false;
+            try {
+                //fileChannel.position(pos);
+                int bytes_writed = fileChannel.write(byteBuffer);
+                if(byteBuffer.hasRemaining()) {
+                    byteBuffer.compact();
+                } else {
+                    byteBuffer.clear();
                 }
-            //}
+            } catch (IOException ex) {
+                Log.i("MY_DEBUG_MStore", "Cannot finish writing file");
+                return false;
+            }
             try {
                 fileChannel.close();
                 mOutput.close();
@@ -318,7 +315,6 @@ public class MStore {
             } else if(count < 0) {
                 count = size_file - pos;
             }
-            //ByteBuffer[] buffer = new ByteBuffer[1];
             ByteBuffer buffer = ByteBuffer.allocate((int)count);
             try {
                 int bytesRead  = fileChannel.read(buffer, (int) pos);
@@ -360,6 +356,19 @@ public class MStore {
             m_dir.exists();
             return null;
         }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    public boolean deleteFile(String file) {
+        File m_dir = new File(Environment.getExternalStorageDirectory().getPath() + File.separator + dir_root_name_store,dir_name_store);
+        if(!m_dir.exists()) {
+            return false;
+        }
+
+        File dataFile = new File(m_dir,file + "." + external_file_store);
+        if (!dataFile.exists()) {
+            return true;
+        }
+        return dataFile.delete();
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////
     public byte[] convertStringToByte(String input) {

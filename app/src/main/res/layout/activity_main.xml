@@ -4,15 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.phamh.mytestnosql.MainActivity">
+    android:padding="10dp"
+    tools:context="com.example.phamh.mytestnosql.MainActivity"
+    tools:layout_editor_absoluteX="10dp"
+    tools:layout_editor_absoluteY="73dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/MainLayout"
+        android:layout_width="946dp"
+        android:layout_height="452dp"
+        android:gravity="center"
+        android:layoutDirection="inherit"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <TextView
+            android:id="@+id/textView_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/button_test_write_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test_write_data" />
+
+        <Button
+            android:id="@+id/button_test_read_all_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test_read_data" />
+
+        <Button
+            android:id="@+id/button_test_optimal_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/test_optimal_data" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
